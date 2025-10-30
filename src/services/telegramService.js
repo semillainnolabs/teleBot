@@ -6,6 +6,7 @@ const networkService = require("./networkService");
 
 class TelegramService {
   constructor() {
+    console.error("telserv Telegram bot token is missing:", config?.telegram?.botToken);
     if (!config?.telegram?.botToken) {
       throw new Error("Telegram bot token is missing");
     }
@@ -225,7 +226,9 @@ class TelegramService {
         `Processing transaction on ${currentNetwork}...`,
       );
 
-      const txResponse = await circleService.sendTransaction(
+      console.error("senTx wallet:", wallets[currentNetwork].walletId, " destinationAddress:",destinationAddress, " amount:",amount);
+
+      const txResponse = await this.circleService.sendTransaction(
         wallets[currentNetwork].walletId,
         destinationAddress,
         amount,

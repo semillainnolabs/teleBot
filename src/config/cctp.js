@@ -7,6 +7,12 @@ const CCTP_CONFIG = {
     "MATIC-AMOY": 7,
   },
   contracts: {
+    "ARC-TESTNET": {
+      tokenMessenger: "0x8fe6b999dc680ccfdd5bf7eb0974218be2542daa",
+      messageTransmitter: "0xe737e5cebeeba77efe34d4aa090756590b1ce275",
+      tokenMinter: "0xb43db544e2c27092c107639ad201b3defabcf192",
+      usdc: "0x3600000000000000000000000000000000000000",
+    },
     "ETH-SEPOLIA": {
       tokenMessenger: "0x8fe6b999dc680ccfdd5bf7eb0974218be2542daa",
       messageTransmitter: "0xe737e5cebeeba77efe34d4aa090756590b1ce275",

@@ -1,4 +1,10 @@
 {
+  "ARC-TESTNET": {
+    "name": "ARC-TESTNET",
+    "usdcAddress": "0x3600000000000000000000000000000000000000",
+    "usdcTokenId": "15dc2b5d-0994-58b0-bf8c-3a0501148ee8",
+    "isTestnet": true
+  },
   "ARB": {
     "name": "ARB",
     "usdcAddress": "0xaf88d065e77c8cc2239327c5edb3a432268e5831",

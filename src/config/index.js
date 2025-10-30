@@ -9,8 +9,8 @@ module.exports = {
     botToken: process.env.TELEGRAM_BOT_TOKEN,
   },
   network: {
-    name: process.env.NETWORK || 'ARB-SEPOLIA',
-    usdcAddress: process.env.USDC_TOKEN_ADDRESS || '0x75faf114eafb1bdbe2f0316df893fd58ce46aa4d',
-    usdcTokenId: process.env.USDC_TOKEN_ID || '4b8daacc-5f47-5909-a3ba-30d171ebad98',
+    name: process.env.NETWORK || 'ARC-TESTNET',
+    usdcAddress: process.env.USDC_TOKEN_ADDRESS || '0x3600000000000000000000000000000000000000',
+    usdcTokenId: process.env.USDC_TOKEN_ID || '15dc2b5d-0994-58b0-bf8c-3a0501148ee8',
   },
 };
