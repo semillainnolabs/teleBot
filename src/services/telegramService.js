@@ -3,6 +3,9 @@ const config = require("../config/index.js");
 const CircleService = require("./circleService");
 const storageService = require("./storageService");
 const networkService = require("./networkService");
+const { GoogleGenerativeAI } = require('@google/generative-ai');
+
+const geminiApiKey = process.env.GEMINI_API_KEY;
 
 class TelegramService {
   constructor() {
@@ -11,6 +14,11 @@ class TelegramService {
       throw new Error("Telegram bot token is missing");
     }
     this.bot = new TelegramBot(config.telegram.botToken, { polling: true });
+    
+    this.genAI = new GoogleGenerativeAI(geminiApiKey);
+    // Initialize the Gemini model (e.g., 'gemini-pro')
+    this.model = this.genAI.getGenerativeModel({ model: "gemini-flash-lite-latest" });
+
     this.circleService = new CircleService(this.bot);
     this.initializeCircleSDK().catch((error) => {
       console.error("Failed to initialize Circle SDK:", error);
@@ -35,6 +43,24 @@ class TelegramService {
     this.bot.onText(/\/walletId/, this.handleWalletId.bind(this));
     this.bot.onText(/\/network (.+)/, this.handleNetwork.bind(this));
     this.bot.onText(/\/networks/, this.handleListNetworks.bind(this));
+
+    this.bot.on('message', async (msg) => {
+        const chatId = msg.chat.id;
+        const userText = msg.text;
+
+        try {
+            // Generate content using Gemini
+            const result = await this.model.generateContent(userText);
+            const response = await result.response;
+            const text = response.text();
+
+            // Send the Gemini response back to Telegram
+            this.bot.sendMessage(chatId, text);
+        } catch (error) {
+            console.error("Error interacting with Gemini API:", error);
+            this.bot.sendMessage(chatId, "Sorry, I couldn't process your request at the moment.");
+        }
+    });
   }
 
   async handleStart(msg) {
@@ -93,8 +119,8 @@ class TelegramService {
         await this.bot.sendMessage(
           chatId,
           `You already have a wallet on ${currentNetwork.name}!\n` +
-            `Your wallet address: ${userWallets[currentNetwork.name].address}\n\n` +
-            `Use /network <network-name> to switch networks if you want to create a wallet on another network.`,
+          `Your wallet address: ${userWallets[currentNetwork.name].address}\n\n` +
+          `Use /network <network-name> to switch networks if you want to create a wallet on another network.`,
         );
         return;
       }
@@ -226,7 +252,7 @@ class TelegramService {
         `Processing transaction on ${currentNetwork}...`,
       );
 
-      console.error("senTx wallet:", wallets[currentNetwork].walletId, " destinationAddress:",destinationAddress, " amount:",amount);
+      console.error("senTx wallet:", wallets[currentNetwork].walletId, " destinationAddress:", destinationAddress, " amount:", amount);
 
       const txResponse = await this.circleService.sendTransaction(
         wallets[currentNetwork].walletId,
